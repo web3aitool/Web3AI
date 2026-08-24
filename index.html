@@ -4,19 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web3 AI Ecosystem | Premium Digital Tools</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=Inter:wght@300;400;500;700&display=swap"
+    <title>WEB3AI | AI Replies & Social Intelligence</title>
+    <meta name="description"
+        content="WEB3AI helps you draft smarter replies and analyze social presence with premium AI tools.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@500;600;700;800;900&family=Space+Grotesk:wght@400;500;700&display=swap"
         rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #050811;
-            --accent-p1: #6366f1;
-            --accent-p2: #10b981;
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --outfit: 'Outfit', sans-serif;
+            --bg: #070812;
+            --bg-soft: #0d1020;
+            --panel: rgba(255, 255, 255, 0.06);
+            --panel-strong: rgba(255, 255, 255, 0.1);
+            --line: rgba(255, 255, 255, 0.12);
+            --text: #f5f7ff;
+            --muted: rgba(220, 226, 255, 0.72);
+            --accent: #8b7bff;
+            --accent-2: #ff7ad9;
+            --accent-3: #43d6ff;
+            --shadow: 0 28px 90px rgba(0, 0, 0, 0.35);
             --inter: 'Inter', sans-serif;
+            --grotesk: 'Space Grotesk', sans-serif;
+            --orbitron: 'Orbitron', sans-serif;
         }
 
         * {
@@ -25,258 +35,650 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+            overflow-y: scroll;
+        }
+
         body {
+            min-height: 100vh;
             font-family: var(--inter);
-            background-color: var(--bg-dark);
-            color: #f8fafc;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 15% 20%, rgba(139, 123, 255, 0.2), transparent 22%),
+                radial-gradient(circle at 85% 15%, rgba(255, 122, 217, 0.18), transparent 22%),
+                radial-gradient(circle at 70% 80%, rgba(67, 214, 255, 0.1), transparent 18%),
+                linear-gradient(180deg, #050711 0%, #090c18 48%, #0d1020 100%);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent 95%);
+            pointer-events: none;
+            opacity: 0.35;
+            z-index: -3;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(28px);
+            pointer-events: none;
+            z-index: -2;
+            opacity: 0.7;
+        }
+
+        .orb.one {
+            top: 12%;
+            left: -6%;
+            width: 280px;
+            height: 280px;
+            background: rgba(139, 123, 255, 0.22);
+        }
+
+        .orb.two {
+            top: 26%;
+            right: -8%;
+            width: 320px;
+            height: 320px;
+            background: rgba(255, 122, 217, 0.2);
+        }
+
+        .orb.three {
+            bottom: -6%;
+            left: 18%;
+            width: 360px;
+            height: 360px;
+            background: rgba(67, 214, 255, 0.1);
+        }
+
+        .page {
+            width: min(1540px, calc(100vw - 32px));
+            margin: 0 auto;
+            padding: 26px 0 28px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
-            position: relative;
         }
 
-        /* Mesh Gradient Background */
-        .mesh-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -1;
-            background:
-                radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 60%);
-            filter: blur(80px);
-            animation: pulseBg 10s ease-in-out infinite alternate;
-        }
-
-        @keyframes pulseBg {
-            0% {
-                transform: scale(1);
-            }
-
-            100% {
-                transform: scale(1.1);
-            }
-        }
-
-        .portal-hero {
-            padding: 120px 20px 60px;
-            text-align: center;
-        }
-
-        h1 {
-            font-family: var(--outfit);
-            font-size: 5rem;
-            font-weight: 900;
-            margin-bottom: 24px;
-            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: -3px;
-            line-height: 1;
-        }
-
-        .subtitle {
-            font-size: 1.25rem;
-            color: #94a3b8;
-            max-width: 650px;
-            margin: 0 auto 80px;
-            line-height: 1.6;
-            font-weight: 300;
-        }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 40px;
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 20px 120px;
-        }
-
-        .product-card {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 40px;
-            padding: 50px;
-            text-align: left;
-            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-            text-decoration: none;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            backdrop-filter: blur(20px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .product-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.05), transparent);
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-
-        .product-card:hover {
-            transform: translateY(-15px) scale(1.02);
-            border-color: rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.06);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-        }
-
-        .product-card:hover::before {
-            opacity: 1;
-        }
-
-        .product-icon-container {
-            width: 70px;
-            height: 70px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
+        .topbar {
+            position: sticky;
+            top: 14px;
+            z-index: 20;
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin-bottom: 30px;
-            transition: transform 0.5s;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 16px 18px;
+            margin-bottom: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 22px;
+            background: rgba(6, 9, 18, 0.68);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
         }
 
-        .product-card:hover .product-icon-container {
-            transform: rotate(10deg) scale(1.1);
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0;
+            text-decoration: none;
+            color: var(--text);
+            flex-shrink: 0;
         }
 
-        .product-icon {
-            width: 45px;
-            height: 45px;
-            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
+        .brand-word {
+            display: flex;
+            flex-direction: column;
+            line-height: 0.95;
         }
 
-        .product-card h2 {
-            font-family: var(--outfit);
-            font-size: 2rem;
-            margin-bottom: 15px;
-            font-weight: 600;
+        .brand-word strong {
+            font-family: var(--orbitron);
+            font-size: 1.55rem;
+            letter-spacing: -0.07em;
+            font-weight: 800;
         }
 
-        .product-card p {
-            color: #94a3b8;
-            line-height: 1.7;
-            margin-bottom: 40px;
-            font-size: 1.1rem;
+        .brand-word span {
+            display: none;
         }
 
-        .btn {
-            margin-top: auto;
+        .nav {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-weight: 700;
-            font-size: 1rem;
-            color: #fff;
-            opacity: 0.8;
-            transition: all 0.3s;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
-        .btn-arrow {
-            width: 20px;
-            height: 20px;
-            transition: transform 0.3s;
+        .nav a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 10px 14px;
+            border-radius: 999px;
+            transition: 0.25s ease;
         }
 
-        .product-card:hover .btn {
-            opacity: 1;
+        .nav a:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.06);
         }
 
-        .product-card:hover .btn-arrow {
-            transform: translateX(8px);
+        .nav-cta {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 13px 18px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 800;
+            color: #090b14;
+            background: linear-gradient(135deg, #ffffff 0%, #cfd3ff 42%, #ff9ddb 100%);
+            box-shadow: 0 16px 36px rgba(139, 123, 255, 0.25);
         }
 
-        .p1:hover .product-icon-container {
-            background: rgba(99, 102, 241, 0.2);
+        .hero {
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            align-items: center;
+            justify-items: center;
+            padding: 80px 10px 52px;
         }
 
-        .p2:hover .product-icon-container {
-            background: rgba(16, 185, 129, 0.2);
-        }
-
-        footer {
-            margin-top: auto;
-            padding: 60px 20px;
+        .hero-copy {
+            position: relative;
+            z-index: 1;
+            padding: 18px 14px;
             text-align: center;
-            color: #475569;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
+            max-width: 860px;
+        }
+
+        .hero-copy h1 {
+            margin-top: 22px;
+            font-family: var(--grotesk);
+            font-size: clamp(3.5rem, 7vw, 7rem);
+            line-height: 0.98;
+            letter-spacing: -0.08em;
+            max-width: 12ch;
+            margin-left: auto;
+            margin-right: auto;
+            background: linear-gradient(90deg, #ffffff 0%, #cfd3ff 45%, #8b7bff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-copy p {
+            max-width: 42rem;
+            margin: 22px auto 0;
+            color: var(--muted);
+            font-size: 1.12rem;
+            line-height: 1.85;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 52px;
+            padding: 0 20px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 800;
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: none;
+            transition: transform 0.28s ease, background 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease, color 0.28s ease;
+        }
+
+        .btn-primary {
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            color: #090b14;
+            background: linear-gradient(135deg, #ffffff 0%, #cfd3ff 42%, #ff9ddb 100%);
+            border-color: transparent;
+            box-shadow: 0 18px 40px rgba(139, 123, 255, 0.25);
+        }
+
+        .hero-note {
+            display: none;
+        }
+
+        .section {
+            padding: 144px 10px 0;
+            scroll-margin-top: 190px;
+        }
+
+        .section + .section {
+            padding-top: 88px;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 32px;
+            margin-bottom: 34px;
+            flex-wrap: wrap;
+        }
+
+        .section-kicker {
+            color: rgba(220, 226, 255, 0.55);
+            font-size: 0.84rem;
+            font-weight: 800;
+            letter-spacing: 0.16em;
             text-transform: uppercase;
         }
 
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 3rem;
-            }
+        .section h2 {
+            font-family: var(--grotesk);
+            font-size: clamp(2.2rem, 4.4vw, 4rem);
+            line-height: 1;
+            letter-spacing: -0.07em;
+        }
 
-            .product-grid {
+        .section-sub {
+            display: none;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.015);
+        }
+
+        .tool-card {
+            display: grid;
+            grid-template-columns: 96px minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 28px;
+            min-height: 0;
+            padding: 42px 34px;
+            text-decoration: none;
+            color: var(--text);
+            transition: transform 0.32s ease, background 0.32s ease, border-color 0.32s ease;
+            position: relative;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.025);
+        }
+
+        .tool-card + .tool-card {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .tool-top {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 16px;
+        }
+
+        .tool-icon {
+            width: 88px;
+            height: 88px;
+            display: grid;
+            place-items: center;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .tool-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .tool-badge {
+            display: none;
+        }
+
+        .tool-card h3 {
+            font-family: var(--grotesk);
+            font-size: clamp(2rem, 3vw, 2.8rem);
+            line-height: 1.02;
+            letter-spacing: -0.06em;
+            margin-top: 0;
+        }
+
+        .tool-card p {
+            color: var(--muted);
+            line-height: 1.8;
+            font-size: 1.1rem;
+            max-width: 32rem;
+            margin-top: 10px;
+        }
+
+        .tool-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            color: var(--text);
+            justify-self: end;
+            align-self: center;
+            margin-top: 0;
+            width: fit-content;
+            padding: 14px 18px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .tool-link svg {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.25s ease;
+        }
+
+        .tool-card:hover .tool-link svg {
+            transform: translateX(6px);
+        }
+
+        footer {
+            padding: 24px 10px 12px;
+            color: rgba(220, 226, 255, 0.52);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: 0.92rem;
+            text-align: center;
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            transform: translateX(-50%);
+            width: max-content;
+            z-index: 15;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .footer-links a {
+            color: rgba(245, 247, 255, 0.78);
+            text-decoration: none;
+        }
+
+        .contact-section {
+            padding: 88px 10px 0;
+        }
+
+        .contact-box {
+            padding: 28px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .contact-box .section-kicker {
+            margin-bottom: 10px;
+        }
+
+        .contact-email {
+            font-family: var(--grotesk);
+            font-size: clamp(1.2rem, 2.2vw, 1.7rem);
+            letter-spacing: -0.04em;
+            color: var(--text);
+            text-decoration: none;
+            padding: 14px 18px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        @media (max-width: 1100px) {
+            .grid-2 {
                 grid-template-columns: 1fr;
             }
 
-            .product-card {
-                padding: 40px;
+            .section-head {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .tool-card + .tool-card {
+                border-top: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .contact-box {
+                padding: 24px 0 0;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .page {
+                width: min(100vw - 20px, 1540px);
+            }
+
+            .topbar {
+                position: static;
+                padding: 14px;
+            }
+
+            .nav {
+                justify-content: flex-start;
+            }
+
+            .nav-cta {
+                width: 100%;
+            }
+
+            .hero {
+                padding-top: 40px;
+            }
+
+            .hero-copy h1 {
+                font-size: clamp(2.8rem, 12vw, 4.8rem);
+            }
+
+            .section {
+                padding-top: 96px;
+            }
+
+            .tool-card {
+                grid-template-columns: 1fr;
+                justify-items: start;
+                padding: 28px 0;
+                gap: 18px;
+            }
+
+            .tool-link {
+                width: 100%;
+                justify-content: space-between;
+                justify-self: stretch;
+            }
+
+            .contact-email {
+                width: 100%;
+                text-align: center;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="mesh-bg"></div>
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
 
-    <section class="portal-hero">
-        <h1>Web3 AI Ecosystem</h1>
-        <p class="subtitle">Experience the future of digital engagement. Premium AI tools designed to elevate your
-            Twitter activity and social analytics.</p>
-
-        <div class="product-grid">
-            <a href="product-1.html" class="product-card p1">
-                <div class="product-icon-container">
-                    <img src="icon.png" alt="Web3 AI Reply" class="product-icon">
-                </div>
-                <h2>Web3 AI Reply</h2>
-                <p>Sophisticated AI drafting for context-aware replies and one-click likes. Save time while staying
-                    authentic.</p>
-                <div class="btn">
-                    <span>Access Tool</span>
-                    <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                </div>
+    <main class="page" id="top">
+        <header class="topbar">
+            <a class="brand" href="#top" aria-label="WEB3AI home">
+                <span class="brand-word">
+                    <strong>WEB3AI</strong>
+                </span>
             </a>
 
-            <a href="product-2.html" class="product-card p2">
-                <div class="product-icon-container">
-                    <img src="logo_x.png" alt="Sorsa-TwitterScout Point" class="product-icon">
-                </div>
-                <h2>Sorsa-TwitterScout Point</h2>
-                <p>Unlock deep profile insights with Sorsa and TwitterScore integration. Predictive analytics at your
-                    fingertips.</p>
-                <div class="btn">
-                    <span>Access Tool</span>
-                    <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                </div>
-            </a>
-        </div>
-    </section>
+            <nav class="nav" aria-label="Primary">
+                <a href="#top">Home</a>
+                <a href="products.html">Products</a>
+            </nav>
 
-    <footer>
-        <p>&copy; 2026 Web3 AI Ecosystem &bull; All Rights Reserved</p>
-    </footer>
+            <a class="nav-cta" href="mailto:web3aibot@gmail.com">Contact Us</a>
+        </header>
+
+        <section class="hero">
+            <div class="hero-copy">
+                <h1>Web3 AI Ecosystem</h1>
+                <p>Experience the future of digital engagement. Premium AI tools designed to elevate your Twitter activity and social analytics.</p>
+
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="web3aireply.html">Open Web3 AI Reply</a>
+                    <a class="btn btn-secondary" href="SorsaTwitterScorePoint.html">Open Sorsa-TwitterScore Point</a>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div>© 2026 WEB3AI</div>
+        </footer>
+    </main>
+
+    <script>
+        function sampleBackgroundColor(ctx, width, height) {
+            const samples = [];
+            const stepX = Math.max(1, Math.floor(width / 24));
+            const stepY = Math.max(1, Math.floor(height / 24));
+
+            for (let x = 0; x < width; x += stepX) {
+                samples.push(ctx.getImageData(x, 0, 1, 1).data);
+                samples.push(ctx.getImageData(x, height - 1, 1, 1).data);
+            }
+
+            for (let y = 0; y < height; y += stepY) {
+                samples.push(ctx.getImageData(0, y, 1, 1).data);
+                samples.push(ctx.getImageData(width - 1, y, 1, 1).data);
+            }
+
+            const avg = samples.reduce((acc, px) => {
+                acc.r += px[0];
+                acc.g += px[1];
+                acc.b += px[2];
+                acc.a += px[3];
+                return acc;
+            }, { r: 0, g: 0, b: 0, a: 0 });
+
+            const len = Math.max(samples.length, 1);
+            return {
+                r: avg.r / len,
+                g: avg.g / len,
+                b: avg.b / len,
+                a: avg.a / len
+            };
+        }
+
+        function colorDistance(r, g, b, bg) {
+            return Math.sqrt(
+                Math.pow(r - bg.r, 2) +
+                Math.pow(g - bg.g, 2) +
+                Math.pow(b - bg.b, 2)
+            );
+        }
+
+        async function transparentizeImage(img) {
+            if (img.dataset.transparentized === '1') return;
+            if (!img.complete || !img.naturalWidth) {
+                await img.decode().catch(() => {});
+            }
+
+            const canvas = document.createElement('canvas');
+            const width = img.naturalWidth;
+            const height = img.naturalHeight;
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const bg = sampleBackgroundColor(ctx, width, height);
+            const imageData = ctx.getImageData(0, 0, width, height);
+            const data = imageData.data;
+
+            const fadeStart = 28;
+            const fadeEnd = 116;
+
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+                const a = data[i + 3];
+                const dist = colorDistance(r, g, b, bg);
+
+                if (dist <= fadeStart) {
+                    data[i + 3] = 0;
+                    continue;
+                }
+
+                if (dist < fadeEnd) {
+                    const t = (dist - fadeStart) / (fadeEnd - fadeStart);
+                    data[i + 3] = Math.round(a * t);
+                }
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+            img.src = canvas.toDataURL('image/png');
+            img.dataset.transparentized = '1';
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('img[data-remove-bg]').forEach((img) => {
+                transparentizeImage(img).catch(() => {});
+            });
+        });
+    </script>
 </body>
 
 </html>
