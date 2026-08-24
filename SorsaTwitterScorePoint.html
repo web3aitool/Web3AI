@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorsa-TwitterScore Point & Unfollow Manager | Real-time Account Analysis</title>
+    <meta name="description" content="Displays Sorsa & TwitterScore ratings on X/Twitter profiles and follower lists with auto follow/unfollow tools. Gauge account quality and alpha at a glance.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@500;600;700;800;900&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #070812;
+            --bg-soft: #0d1020;
+            --panel: rgba(255, 255, 255, 0.06);
+            --panel-strong: rgba(255, 255, 255, 0.1);
+            --line: rgba(255, 255, 255, 0.12);
+            --text: #f5f7ff;
+            --muted: rgba(220, 226, 255, 0.72);
+            --accent: #8b7bff;
+            --accent-2: #ff7ad9;
+            --accent-3: #43d6ff;
+            --green: #22c55e;
+            --yellow: #eab308;
+            --red: #ef4444;
+            --shadow: 0 28px 90px rgba(0, 0, 0, 0.35);
+            --inter: 'Inter', sans-serif;
+            --grotesk: 'Space Grotesk', sans-serif;
+            --orbitron: 'Orbitron', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-y: scroll;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: var(--inter);
+            color: var(--text);
+            background:
+                radial-gradient(circle at 15% 20%, rgba(139, 123, 255, 0.2), transparent 22%),
+                radial-gradient(circle at 85% 15%, rgba(255, 122, 217, 0.18), transparent 22%),
+                radial-gradient(circle at 70% 80%, rgba(67, 214, 255, 0.1), transparent 18%),
+                linear-gradient(180deg, #050711 0%, #090c18 48%, #0d1020 100%);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent 95%);
+            pointer-events: none;
+            opacity: 0.35;
+            z-index: -3;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(28px);
+            pointer-events: none;
+            z-index: -2;
+            opacity: 0.7;
+        }
+
+        .orb.one {
+            top: 12%;
+            left: -6%;
+            width: 280px;
+            height: 280px;
+            background: rgba(139, 123, 255, 0.22);
+        }
+
+        .orb.two {
+            top: 26%;
+            right: -8%;
+            width: 320px;
+            height: 320px;
+            background: rgba(255, 122, 217, 0.2);
+        }
+
+        .orb.three {
+            bottom: -6%;
+            left: 18%;
+            width: 360px;
+            height: 360px;
+            background: rgba(67, 214, 255, 0.1);
+        }
+
+        .page {
+            width: min(1540px, calc(100vw - 32px));
+            margin: 0 auto;
+            padding: 26px 0 28px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 14px;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 16px 18px;
+            margin-bottom: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 22px;
+            background: rgba(6, 9, 18, 0.68);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0;
+            text-decoration: none;
+            color: var(--text);
+            flex-shrink: 0;
+        }
+
+        .brand-word {
+            display: flex;
+            flex-direction: column;
+            line-height: 0.95;
+        }
+
+        .brand-word strong {
+            font-family: var(--orbitron);
+            font-size: 1.55rem;
+            letter-spacing: -0.07em;
+            font-weight: 800;
+        }
+
+        .brand-word span {
+            display: none;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 10px 14px;
+            border-radius: 999px;
+            transition: 0.25s ease;
+        }
+
+        .nav a:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .nav-cta {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 13px 18px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 800;
+            color: #090b14;
+            background: linear-gradient(135deg, #ffffff 0%, #cfd3ff 42%, #ff9ddb 100%);
+            box-shadow: 0 16px 36px rgba(139, 123, 255, 0.25);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            align-items: center;
+            justify-items: center;
+            padding: 64px 10px 40px;
+        }
+
+        .hero-copy {
+            position: relative;
+            z-index: 1;
+            padding: 18px 14px;
+            text-align: center;
+            max-width: 920px;
+        }
+
+        .back-btn-hero {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            text-decoration: none;
+            transition: transform 0.28s ease, background 0.28s ease, border-color 0.28s ease, color 0.28s ease, box-shadow 0.28s ease;
+            flex-shrink: 0;
+        }
+
+        .back-btn-hero:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.22);
+            color: #ffffff;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-logo-container {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 24px;
+            display: grid;
+            place-items: center;
+            position: relative;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-logo-container::before {
+            content: '';
+            position: absolute;
+            inset: -16px;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0.1) 45%, transparent 75%),
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.15), transparent 70%);
+            filter: blur(15px);
+            opacity: 0.8;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero-logo-img {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.25));
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        .hero-copy h1 {
+            font-family: var(--grotesk);
+            font-size: clamp(2.4rem, 5vw, 4.5rem);
+            line-height: 1.08;
+            letter-spacing: -0.06em;
+            background: linear-gradient(90deg, #ffffff 0%, #cfd3ff 45%, #8b7bff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-copy p {
+            max-width: 48rem;
+            margin: 20px auto 0;
+            color: var(--muted);
+            font-size: 1.12rem;
+            line-height: 1.8;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 32px;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 52px;
+            padding: 0 26px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1rem;
+            color: #090b14;
+            background: linear-gradient(135deg, #ffffff 0%, #cfd3ff 42%, #ff9ddb 100%);
+            border: none;
+            box-shadow: 0 16px 36px rgba(139, 123, 255, 0.25);
+            transition: transform 0.28s ease, box-shadow 0.28s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 46px rgba(139, 123, 255, 0.4);
+            color: #090b14;
+        }
+
+        /* Section Commons */
+        .section {
+            padding: 60px 10px 0;
+            max-width: 1360px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-head {
+            margin-bottom: 34px;
+            text-align: center;
+        }
+
+        .section-kicker {
+            color: rgba(220, 226, 255, 0.55);
+            font-size: 0.84rem;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .section h2 {
+            font-family: var(--grotesk);
+            font-size: clamp(2.2rem, 4vw, 3.4rem);
+            line-height: 1.05;
+            letter-spacing: -0.06em;
+        }
+
+        /* Color-Coding & Analytics Preview */
+        .analytics-preview {
+            background: radial-gradient(circle at 50% 0%, rgba(139, 123, 255, 0.12), transparent 70%),
+                        linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 36px;
+            padding: 46px 36px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(14px);
+        }
+
+        .color-coding-row {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+            margin-top: 32px;
+        }
+
+        .badge-card {
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: transform 0.28s ease, border-color 0.28s ease;
+        }
+
+        .badge-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .badge-indicator {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .badge-indicator.green {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: var(--green);
+            box-shadow: 0 0 16px rgba(34, 197, 94, 0.25);
+        }
+
+        .badge-indicator.yellow {
+            background: rgba(234, 179, 8, 0.15);
+            border: 1px solid rgba(234, 179, 8, 0.4);
+            color: var(--yellow);
+            box-shadow: 0 0 16px rgba(234, 179, 8, 0.25);
+        }
+
+        .badge-indicator.red {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: var(--red);
+            box-shadow: 0 0 16px rgba(239, 68, 68, 0.25);
+        }
+
+        .badge-info h4 {
+            font-family: var(--grotesk);
+            font-size: 1.15rem;
+            margin-bottom: 4px;
+        }
+
+        .badge-info p {
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        /* Feature Grid (6 Cards) */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .f-card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.03) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            padding: 38px 30px;
+            transition: transform 0.32s ease, border-color 0.32s ease, background 0.32s ease;
+        }
+
+        .f-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .f-card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            display: grid;
+            place-items: center;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+        }
+
+        .f-card h3 {
+            font-family: var(--grotesk);
+            font-size: 1.5rem;
+            letter-spacing: -0.04em;
+            margin-bottom: 10px;
+        }
+
+        .f-card p {
+            color: var(--muted);
+            font-size: 1rem;
+            line-height: 1.65;
+        }
+
+        /* Steps / How to Use */
+        .steps-container {
+            max-width: 1360px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .step-card {
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            transition: transform 0.32s ease, border-color 0.32s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .step-num {
+            font-family: var(--grotesk);
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.06em;
+            background: linear-gradient(135deg, #ffffff 0%, #8b7bff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            opacity: 0.85;
+            line-height: 1;
+        }
+
+        .step-content h3 {
+            font-family: var(--grotesk);
+            font-size: 1.35rem;
+            letter-spacing: -0.04em;
+            margin-bottom: 6px;
+        }
+
+        .step-content p {
+            color: var(--muted);
+            font-size: 0.96rem;
+            line-height: 1.55;
+        }
+
+        /* Banner */
+        .cta-banner-section {
+            padding: 80px 10px 40px;
+            max-width: 1360px;
+            margin: 0 auto;
+        }
+
+        .cta-banner {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 36px;
+            padding: 54px 30px;
+            text-align: center;
+            background: radial-gradient(circle at 50% 0%, rgba(139, 123, 255, 0.22), transparent 70%),
+                        rgba(255, 255, 255, 0.02);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(14px);
+        }
+
+        .cta-banner h2 {
+            font-family: var(--grotesk);
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            letter-spacing: -0.06em;
+            margin-bottom: 16px;
+        }
+
+        .cta-banner p {
+            color: var(--muted);
+            font-size: 1.1rem;
+            max-width: 36rem;
+            margin: 0 auto 28px;
+        }
+
+        /* Normal Document Flow Footer */
+        footer {
+            margin-top: auto;
+            padding: 60px 10px 32px;
+            color: rgba(220, 226, 255, 0.52);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            font-size: 0.92rem;
+            text-align: center;
+            width: 100%;
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+        }
+
+        .footer-links a {
+            color: rgba(245, 247, 255, 0.78);
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 500;
+            transition: color 0.25s ease;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+
+        @media (max-width: 1100px) {
+            .feature-grid, .color-coding-row {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .steps-container {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 760px) {
+            .page {
+                width: min(100vw - 20px, 1540px);
+            }
+
+            .topbar {
+                position: static;
+                padding: 14px;
+            }
+
+            .nav {
+                justify-content: flex-start;
+            }
+
+            .nav-cta {
+                width: 100%;
+            }
+
+            .hero-copy h1 {
+                font-size: clamp(2rem, 8vw, 3.4rem);
+            }
+
+            .feature-grid, .color-coding-row, .steps-container {
+                grid-template-columns: 1fr;
+            }
+
+            .analytics-preview {
+                padding: 28px 18px;
+            }
+
+            footer {
+                padding-top: 40px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
+
+    <main class="page">
+        <header class="topbar">
+            <a class="brand" href="index.html" aria-label="WEB3AI home">
+                <span class="brand-word">
+                    <strong>WEB3AI</strong>
+                </span>
+            </a>
+
+            <nav class="nav" aria-label="Primary">
+                <a href="index.html">Home</a>
+                <a href="products.html">Products</a>
+            </nav>
+
+            <a class="nav-cta" href="mailto:web3aibot@gmail.com">Contact Us</a>
+        </header>
+
+        <section class="hero">
+            <div class="hero-copy">
+                <div class="hero-logo-container">
+                    <img src="logo_x.png" alt="Sorsa-TwitterScore Point icon" class="hero-logo-img">
+                </div>
+                <h1>Sorsa-TwitterScore Point & Unfollow Manager</h1>
+                <p>Real-time account quality ratings and automated follow/unfollow tools for X. Gauge profile alpha at a glance and filter out noise instantly.</p>
+
+                <div class="hero-actions">
+                    <a class="back-btn-hero" href="products.html" aria-label="Back to Products" title="Back to Products">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                        </svg>
+                    </a>
+                    <a class="btn" href="#">
+                        <span>Add to Chrome</span>
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M5 12h14M12 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="analytics-preview">
+                <div class="section-head">
+                    <span class="section-kicker">Visual Ratings</span>
+                    <h2>Color Coded Quality Badges</h2>
+                </div>
+                <div class="color-coding-row">
+                    <div class="badge-card">
+                        <div class="badge-indicator green">🟢</div>
+                        <div class="badge-info">
+                            <h4>Green Tier</h4>
+                            <p>High quality / Trusted account</p>
+                        </div>
+                    </div>
+                    <div class="badge-card">
+                        <div class="badge-indicator yellow">🟡</div>
+                        <div class="badge-info">
+                            <h4>Yellow Tier</h4>
+                            <p>Medium quality rating</p>
+                        </div>
+                    </div>
+                    <div class="badge-card">
+                        <div class="badge-indicator red">🔴</div>
+                        <div class="badge-info">
+                            <h4>Red Tier</h4>
+                            <p>Low quality / New account</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-head">
+                <span class="section-kicker">Key Features</span>
+                <h2>Everything You Need For X Analysis</h2>
+            </div>
+            <div class="feature-grid">
+                <div class="f-card">
+                    <div class="f-card-icon">👤</div>
+                    <h3>Profile Integration</h3>
+                    <p>See the Sorsa score badge directly on any user's profile page as soon as you visit their X handle.</p>
+                </div>
+                <div class="f-card">
+                    <div class="f-card-icon">👥</div>
+                    <h3>Follower & Following Lists</h3>
+                    <p>Batch-analyze accounts while browsing lists. No more clicking into every single profile!</p>
+                </div>
+                <div class="f-card">
+                    <div class="f-card-icon">⚡</div>
+                    <h3>Follow / Unfollow Tools</h3>
+                    <p>Follow or unfollow accounts directly from the score badge. Filter follower lists by score and act in seconds.</p>
+                </div>
+                <div class="f-card">
+                    <div class="f-card-icon">🎨</div>
+                    <h3>Visual Color Coding</h3>
+                    <p>Instant visual badges (Green, Yellow, Red) highlight high-value profiles and flag new or low-quality accounts.</p>
+                </div>
+                <div class="f-card">
+                    <div class="f-card-icon">🚀</div>
+                    <h3>Lightning Fast</h3>
+                    <p>Lightweight and optimized to ensure it never slows down your Twitter/X browsing experience.</p>
+                </div>
+                <div class="f-card">
+                    <div class="f-card-icon">🔒</div>
+                    <h3>Data Privacy</h3>
+                    <p>We only use public profile data to fetch scores. Your private browsing history is never tracked.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-head">
+                <span class="section-kicker">Quick Start</span>
+                <h2>How To Use</h2>
+            </div>
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-num">01</div>
+                    <div class="step-content">
+                        <h3>Install Extension</h3>
+                        <p>Add the extension to Chrome with a single click.</p>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">02</div>
+                    <div class="step-content">
+                        <h3>Visit X / Twitter</h3>
+                        <p>Go to x.com or twitter.com in your web browser.</p>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">03</div>
+                    <div class="step-content">
+                        <h3>See Score Badges</h3>
+                        <p>Spot Sorsa badges next to usernames on profiles & lists.</p>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">04</div>
+                    <div class="step-content">
+                        <h3>Manage & Filter</h3>
+                        <p>Use batch follow/unfollow tools to clean up your feed.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-banner-section">
+            <div class="cta-banner">
+                <h2>Stay ahead of the curve</h2>
+                <p>A huge time saver for cleaning up your feed or targeting quality accounts. Filter out the noise with Sorsa-TwitterScore Point & Unfollow Manager.</p>
+                <a class="btn" href="#">
+                    <span>Add to Chrome</span>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M5 12h14M12 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-links">
+                <a href="privacy-2.html" target="_blank" rel="noopener noreferrer">Privacy</a>
+                <a href="mailto:web3aibot@gmail.com">Contact</a>
+            </div>
+            <div>© 2026 WEB3AI</div>
+        </footer>
+    </main>
+</body>
+
+</html>
